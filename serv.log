@@ -1,0 +1,3 @@
+Arguments: node,/usr/local/lib/node_modules/scripted/node_modules/serv/static-server.js,8000,/home/rob/workspace/NumbersToText
+Serving files from /home/rob/workspace/NumbersToText at 127.0.0.1:8000
+LiveReload server listening on port 35729.
