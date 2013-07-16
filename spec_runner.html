@@ -7,10 +7,10 @@
     <link rel="stylesheet" type="text/css" href="bower_components/jasmine/lib/jasmine-core/jasmine.css"></link>
     <script type="text/javascript" src="bower_components/jasmine/lib/jasmine-core/jasmine.js"></script>
     <script type="text/javascript" src="bower_components/jasmine/lib/jasmine-core/jasmine-html.js"></script>
-    <script type="text/javascript" src="bower_components/requirejs/require.js" data-main="tests/spec"></script>
+    <script type="text/javascript" src="bower_components/requirejs/require.js"></script>
 
 	<script type="text/javascript">
-		function() {
+		(function() {
 			'use strict';
 			
 			var jasmineEnv = jasmine.getEnv();
@@ -31,16 +31,24 @@
 				if (currentWindowOnload) {
 					currentWindowOnload();
 				}
+				loadClasses();
 			};
-			
-			require([
-				'tests/NumbersToTextSpec'
-				], 
-				function() {
-					console.log("Starting Jasmine...");
-					jasmineEnv.execute();
+
+			function loadClasses() {
+				require.config({
+					baseUrl: "./js",
+					optimize: "none",
 				});
-		});
+				
+				require([
+					'spec/NumbersToTextSpec'
+					], 
+					function() {
+						console.log("Starting Jasmine...");
+						jasmineEnv.execute();
+					});
+			}
+		})();
 	
 	</script>
 </head>

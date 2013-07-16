@@ -5,18 +5,15 @@ define(
     ],
     function(){
 		'use strict';
-        function NumbersToText(){
-        }
- 
-        // Define the class methods.
-        NumbersToText.prototype = {};
- 
- 
-        // -------------------------------------------------- //
-        // -------------------------------------------------- //
- 
- 
-        // Return the module constructor.
-        return( NumbersToText );
+		
+		var NumbersToText;
+		
+		NumbersToText = {
+			translate : function (number) {
+				return 'ONE';
+			}
+        };
+
+        return NumbersToText;
     }
 );
