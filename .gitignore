@@ -1,3 +1,4 @@
 *.log
-
+my.conf.js
 bower_components
+node_modules
