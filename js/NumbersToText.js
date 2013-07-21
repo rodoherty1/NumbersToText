@@ -14,12 +14,8 @@ define(
 			this.translateNumberUnder1000  = function (number) {
 				var hundreds = this.div(number, 100);
 				var hundredsInWords = zeroToNineteen[hundreds] + ' hundred';
-				
-				if (number % 100) {
-					return hundredsInWords + ' and ' + this.translateNumberUnder100(number % 100);
-				} else {
-					return hundredsInWords;
-				}
+
+				return hundredsInWords;
 			};
 			
 			
@@ -55,11 +51,22 @@ define(
 					}
 				} 
 				
-				if (number < 100) {
-					return numberInWords + this.translateNumberUnder100(number);
-				} else {
-					return numberInWords + this.translateNumberUnder1000(number);
+				if ((number < 1000) && (number >= 100)) {
+					numberInWords = numberInWords + this.translateNumberUnder1000(number);
+					number = number % 100;
+					if (number) {
+						numberInWords = numberInWords + ' ';
+					}
 				}
+				
+				var unitsInWords = this.translateNumberUnder100(number);
+				if (numberInWords.length === 0) {
+					numberInWords = unitsInWords;
+				} else if (number) {					
+					numberInWords = numberInWords + 'and ' + unitsInWords;
+				}
+				
+				return numberInWords;
 			};
 
 			this.div = function (dividend, divisor) {
