@@ -9,6 +9,7 @@ define(
 		function NumbersToText () {
 			var zeroToNineteen = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 			var twentyToNinety = ['units', 'tens', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+			var suffixes = ['', 'thousand'];
 
 			this.translateNumberUnder1000  = function (number) {
 				var hundreds = this.div(number, 100);
@@ -40,14 +41,24 @@ define(
 
 
 			this.translate = function (number) {
-				if ((this.div(number, 1000)) > 1000) {
-					return this.translate (number % 1000);
-				} else {
-					if (number < 100) {
-						return this.translateNumberUnder100(number);
+				var numberInWords = '';
+				
+				var numberInThousands = this.div(number, 1000);
+				
+				if (numberInThousands > 0) {
+					numberInWords = this.translate (numberInThousands) + ' ' + this.getSuffix(number);
+					number = number % 1000;
+					if (number) {
+						numberInWords = numberInWords + ' ';
 					} else {
-						return this.translateNumberUnder1000(number);
+						return numberInWords;
 					}
+				} 
+				
+				if (number < 100) {
+					return numberInWords + this.translateNumberUnder100(number);
+				} else {
+					return numberInWords + this.translateNumberUnder1000(number);
 				}
 			};
 
@@ -55,6 +66,14 @@ define(
 				return Math.floor(dividend / divisor);				
 			};
 			
+			this.getSuffix = function (number) {
+				var index = 0;
+				while ((number = this.div(number, 1000)) > 0) {
+					index++;
+				}
+				
+				return suffixes[index];
+			};
 		}
 		
         return new NumbersToText();
