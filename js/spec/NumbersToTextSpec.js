@@ -56,8 +56,7 @@ function(numbersToText) {
 		});
 	});
 
-	
-	describe('Translate the remaining numbers', function(){
+	describe('Translate the numbers between 30 and 100', function(){
 	    var tests = {};
 	    tests['30'] = 'thirty';
 	    tests['32'] = 'thirty two';
@@ -73,10 +72,34 @@ function(numbersToText) {
 	    tests['87'] = 'eighty seven';
 	    tests['90'] = 'ninety';
 	    tests['98'] = 'ninety eight';
+
+		it('translates the numbers from 30 - 99', function(){
+			for (var key in tests) {
+				var nextNum = parseInt(key, 10);
+				expect(numbersToText.translate(nextNum)).toBe(tests[key]);
+			}
+		});
+	});
+
+	describe('Translate the numbers between 100 and 999', function(){
+	    var tests = {};
 	    tests['100'] = 'one hundred';
 	    tests['101'] = 'one hundred and one';
 	    tests['114'] = 'one hundred and fourteen';
-	    tests['199'] = 'one hundred and ninety nine';
+	    tests['299'] = 'two hundred and ninety nine';
+	    tests['406'] = 'four hundred and six';
+
+		it('translates the numbers from 100 - 999', function(){
+			for (var key in tests) {
+				var nextNum = parseInt(key, 10);
+				expect(numbersToText.translate(nextNum)).toBe(tests[key]);
+			}
+		});
+	});
+
+
+	describe('Translate the remaining numbers', function(){
+	    var tests = {};
 	    tests['1000'] = 'one thousand';
 	    tests['1001'] = 'one thousand and one';
 	    tests['1099'] = 'one thousand and ninety nine';
