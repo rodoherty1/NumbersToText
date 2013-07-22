@@ -7,10 +7,47 @@ define(
 		'use strict';
 		
 		function NumbersToText () {
-			var zeroToNineteen = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+			var zeroToNineteen = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 			var twentyToNinety = ['units', 'tens', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-			var suffixes = ['', 'thousand'];
+			var suffixes = ['', ' thousand', ' million', ' brazillion'];
 
+			this.translate = function (number) {
+				var numberInWords = '';
+				var numberDiv1000 = number;				
+				var blocks=[],  blocksInWords=[];
+				blocks = this.splitIntoBlocks(number);
+				
+				for (var i=0; i<blocks.length; i++) {
+					blocksInWords[i] = this.translateBlock(blocks[i]);
+				}
+				
+				numberInWords = this.concatBlocksIntoWords (blocks, blocksInWords);
+				
+				return numberInWords;
+			};
+			
+			this.translateBlock = function(number) {
+				var numberInWords = '';
+				
+				if (number >= 100) {
+					numberInWords = this.translateNumberUnder1000(number);
+					number = number % 100;
+					if (number) {
+						numberInWords = numberInWords + ' ';
+					}
+				}
+				
+				var unitsInWords = this.translateNumberUnder100(number);
+				if (numberInWords.length === 0) {
+					numberInWords = unitsInWords;
+				} else if (number) {					
+					numberInWords = numberInWords + 'and ' + unitsInWords;
+				}	
+				
+				return numberInWords;
+			};
+			
+			
 			this.translateNumberUnder1000  = function (number) {
 				var hundreds = this.div(number, 100);
 				var hundredsInWords = zeroToNineteen[hundreds] + ' hundred';
@@ -35,52 +72,47 @@ define(
 				}
 			};
 
-
-			this.translate = function (number) {
-				var numberInWords = '';
+			this.concatBlocksIntoWords = function(blocks, blocksInWords) {
+				var numberInWords = blocksInWords[blocks.length-1] + suffixes[blocks.length-1];
 				
-				var numberInThousands = this.div(number, 1000);
-				
-				if (numberInThousands > 0) {
-					numberInWords = this.translate (numberInThousands) + ' ' + this.getSuffix(number);
-					number = number % 1000;
-					if (number) {
-						numberInWords = numberInWords + ' ';
-					} else {
-						return numberInWords;
-					}
-				} 
-				
-				if ((number < 1000) && (number >= 100)) {
-					numberInWords = numberInWords + this.translateNumberUnder1000(number);
-					number = number % 100;
-					if (number) {
-						numberInWords = numberInWords + ' ';
+				for (var i=blocks.length-2; i>0; i--) {
+					if (blocks[i] > 0) {
+						numberInWords = numberInWords + ' ' + blocksInWords[i] +  suffixes[i];
 					}
 				}
 				
-				var unitsInWords = this.translateNumberUnder100(number);
+				if (blocks.length > 1) {
+					if (blocks[0] > 0 && blocks[0] < 100) {
+						numberInWords = numberInWords + ' and ' + blocksInWords[0];
+					} else if (blocks[0] >= 100 && blocks[0] < 1000) {
+						numberInWords = numberInWords + ' ' + blocksInWords[0];
+					}
+				}
+				
 				if (numberInWords.length === 0) {
-					numberInWords = unitsInWords;
-				} else if (number) {					
-					numberInWords = numberInWords + 'and ' + unitsInWords;
+					numberInWords = 'zero';
 				}
 				
 				return numberInWords;
+			};
+			
+
+			this.splitIntoBlocks = function (number) {
+				var blockIndex = 0;
+				var blocks = [];
+				
+				do {
+					blocks[blockIndex] = number % 1000;	
+					blockIndex++;
+				} while ((number = this.div(number, 1000)) > 0);
+				
+				return blocks;
 			};
 
 			this.div = function (dividend, divisor) {
 				return Math.floor(dividend / divisor);				
 			};
 			
-			this.getSuffix = function (number) {
-				var index = 0;
-				while ((number = this.div(number, 1000)) > 0) {
-					index++;
-				}
-				
-				return suffixes[index];
-			};
 		}
 		
         return new NumbersToText();

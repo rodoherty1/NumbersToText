@@ -1,5 +1,5 @@
 define([
-	'NumbersToText'
+	'NumbersToText2'
 	],
 function(numbersToText) {
 	'use strict';
@@ -97,7 +97,7 @@ function(numbersToText) {
 		});
 	});
 
-	describe('Translate the numbers from 1000 and 1999', function(){
+	describe('Translate the numbers from 1000 to 1999', function(){
 	    var tests = {};
 	    tests['1000'] = 'one thousand';
 	    tests['1001'] = 'one thousand and one';
@@ -112,13 +112,26 @@ function(numbersToText) {
 	});
 
 
-	describe('Translate the remaining numbers', function(){
+	describe('Translate the numbers from 2000 to 1,000,000', function(){
 	    var tests = {};
 	    tests['10000'] = 'ten thousand';
 	    tests['10001'] = 'ten thousand and one';
 	    tests['10099'] = 'ten thousand and ninety nine';
 	    tests['100000'] = 'one hundred thousand';
 	    tests['100001'] = 'one hundred thousand and one';
+	    tests['1000000'] = 'one million';
+
+		it('translates the numbers from 2000 - 1,000,000', function(){
+			for (var key in tests) {
+				var nextNum = parseInt(key, 10);
+				expect(numbersToText.translate(nextNum)).toBe(tests[key]);
+			}
+		});
+	});
+
+
+	describe('Translate the remaining numbers', function(){
+	    var tests = {};
 	    tests['1000000'] = 'one million';
 	    tests['1000001'] = 'one million and one';
 	    tests['1000099'] = 'one million and ninety nine';
