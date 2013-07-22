@@ -1,4 +1,5 @@
 *.log
+*.old
 karma.conf.js
 bower_components
 node_modules
